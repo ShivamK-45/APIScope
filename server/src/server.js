@@ -3,6 +3,13 @@ import cors from 'cors';
 import helmet from 'helmet';
 import config from './shared/config/index.js';
 import logger from './shared/config/logger.js';
+
+import { webcrypto } from "node:crypto";
+
+if (!globalThis.crypto) {
+    globalThis.crypto = webcrypto;
+}
+
 import mongodb from './shared/config/mongodb.js';
 import postgres from './shared/config/postgres.js';
 import rabbitmq from './shared/config/rabbitmq.js';
@@ -11,7 +18,7 @@ import ResponseFormatter from './shared/utils/responseFormatter.js';
 import cookieParser from "cookie-parser"
 
 // Routers
-
+import authRouter from "./services/auth/routes/authRouter.js";
 
 /**
  * Initialize Express app
@@ -79,6 +86,12 @@ app.get("/", (req, res) => {
         )
     )
 });
+
+
+/**
+ * API Routes
+ */
+app.use("/api/auth", authRouter);
 
 
 /**
