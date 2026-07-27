@@ -19,6 +19,7 @@ import cookieParser from "cookie-parser"
 
 // Routers
 import authRouter from "./services/auth/routes/authRouter.js";
+import clientRouter from "./services/client/routes/clientRoutes.js";
 
 /**
  * Initialize Express app
@@ -92,6 +93,7 @@ app.get("/", (req, res) => {
  * API Routes
  */
 app.use("/api/auth", authRouter);
+app.use("/api", clientRouter);
 
 
 /**

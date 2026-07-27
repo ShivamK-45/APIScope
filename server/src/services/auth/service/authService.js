@@ -3,6 +3,7 @@ import AppError from "../../../shared/utils/AppError.js";
 import jwt from "jsonwebtoken";
 import logger from "../../../shared/config/logger.js"
 import bcrypt from "bcryptjs";
+import { APPLICATION_ROLES } from "../../../shared/constants/roles.js";
 
 
 /**
@@ -190,7 +191,8 @@ export class AuthService {
 
             return user.role === APPLICATION_ROLES.SUPER_ADMIN
         } catch (error) {
-
+            logger.error(error);
+            throw error
         }
     }
 }
