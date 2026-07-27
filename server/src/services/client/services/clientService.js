@@ -177,4 +177,113 @@ export class ClientService {
         }
     };
 
+    /**
+     * Generate a new API key
+     * @returns {String} - The generated API key
+     */
+    generateApiKey() {
+        const prefix = "apim";
+        const randomBytes = crypto.randomBytes(20).toString("hex");
+        return `${prefix}_${randomBytes}`
+    }
+
+    /**
+     * Create a new API key for a specific client
+     * @param {String} clientId - The client ID
+     * @param {Object} keyData - The API key data
+     * @param {Object} user - The user creating the API key
+     * @returns {Object} - The created API key
+     */
+    async createApiKey(clientId, keyData, user) {
+        try {
+            const client = await this.clientRepository.findById(clientId);
+
+            if (!client) {
+                throw new AppError("Client not found", 404)
+            };
+
+            if (!this.canUserAccessClient(user, clientId)) {
+                throw new AppError("Access denied", 403)
+            };
+
+            if (!(user.role === APPLICATION_ROLES.SUPER_ADMIN || user.role === APPLICATION_ROLES.CLIENT_ADMIN)) {
+                throw new AppError("Access denied - Only Super Admin and Client Admin can create API keys", 403)
+            };
+
+
+            const { name, description, environment = "production" } = keyData;
+
+            const keyId = uudiv4();
+            const keyValue = this.generateApiKey();
+
+            const apiKey = await this.apiKeyRepository.create({
+                keyId,
+                keyValue,
+                clientId,
+                name,
+                description,
+                environment,
+                createdBy: user.userId
+            });
+
+            return apiKey;
+        } catch (error) {
+            logger.error("Error creating API key", error)
+            throw error;
+        }
+    };
+
+    /**
+     * Get all API keys for a specific client
+     * @param {String} clientId - The client ID
+     * @param {Object} user - The user requesting the API keys
+     * @returns {Array} - The list of API keys
+     */
+    async getClientApiKeys(clientId, user) {
+        try {
+            if (!this.canUserAccessClient(user, clientId)) {
+                throw new AppError('Access denied to this client', 403);
+            };
+
+            const apiKeys = await this.apiKeyRepository.findByClientId(clientId);
+
+            const formattedResponse = apiKeys.map(key => {
+                const keyObj = key.toObject ? key.toObject() : key;
+                delete keyObj.keyValue;
+                return keyObj
+            })
+
+            return formattedResponse
+
+        } catch (error) {
+            logger.error('Error getting client API keys:', error);
+            throw error;
+        }
+    };
+
+    async getClientByApiKey(apiKey) {
+        try {
+            const key = await this.apiKeyRepository.findByKeyValue(apiKey);
+
+            if (!key) {
+                return null;
+            }
+
+            if (key.isExpired()) {
+                return null;
+            }
+
+            // Get the populated client from the key
+            const client = key.clientId;
+
+            return {
+                client,
+                apiKey: key,
+            };
+        } catch (error) {
+            logger.error('Error finding client by API key:', error);
+            throw error;
+        }
+    }
+    
 }
