@@ -4,7 +4,7 @@
  * @readonly
  * @enum {string}
  */
-export const Circuitstate = Object.freeze({
+export const CircuitState = Object.freeze({
     CLOSED: 'CLOSED',
     OPEN: 'OPEN',
     HALF_OPEN: 'HALF_OPEN'

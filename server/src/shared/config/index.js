@@ -26,7 +26,7 @@ const config = {
         url: process.env.RABBITMQ_URL || 'amqp://localhost:5672',
         queue: process.env.RABBITMQ_QUEUE || 'api_hits',
         publisherConfirm: process.env.RABBITMQ_PUBLISHER_CONFIRM === 'true' || false,
-        retryAttemts: parseInt(process.env.RABBITMQ_RETRY_ATTEMPTS || '3', 10),
+        retryAttempts: parseInt(process.env.RABBITMQ_RETRY_ATTEMPTS || '3', 10),
         retryDelay: parseInt(process.env.RABBITMQ_RETRY_DELAY || '1000', 10),
     },
 
