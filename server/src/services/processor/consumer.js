@@ -1,4 +1,9 @@
 import { z } from 'zod';
+import { webcrypto } from "node:crypto";
+
+if (!globalThis.crypto) {
+    globalThis.crypto = webcrypto;
+}
 import rabbitmq from '../../shared/config/rabbitmq.js';
 import mongodb from '../../shared/config/mongodb.js';
 import postgres from '../../shared/config/postgres.js';
