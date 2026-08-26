@@ -1,23 +1,29 @@
 {
-  "name": "dashboard",
+  "name": "api-monitoring-dashboard",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.8.4",
+    "apexcharts": "^5.3.6",
+    "axios": "^1.6.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.553.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-apexcharts": "^1.8.0",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.2"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
-    "oxlint": "^1.79.0",
+    "sass": "^1.94.2",
     "vite": "^8.2.2"
   }
 }
